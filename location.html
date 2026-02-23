@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Directions</title>
+    <link href="style13.css" rel="stylesheet"/>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .map-container {
+            height: 500px;
+            width: 40%;
+            margin-top: 100px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: left;
+        }
+        .checkbox-group label {
+            margin-right: 5px; /* Reduced space */
+        }
+    </style>
+</head>
+<body>
+    <form id="locationForm">
+        <h1 class="text-center">Enter your Locations</h1>
+        <label for="source">Source:</label>
+        <input type="text" id="source" name="source" required><br><br>
+        
+        <label for="destination">Destination:</label>
+        <input type="text" id="destination" name="destination" required><br><br>
+        
+        <label for="workplace">Workplace:</label>
+        <input type="text" id="workplace" name="workplace" required><br><br>
+
+        <div class="checkbox-group">
+            <label for="enableAlarm">Enable Alarm:</label>
+            <input type="checkbox" id="enableAlarm" name="enableAlarm">
+        </div>
+        <br><br>
+        
+        <button type="button" onclick="openGoogleMaps()">Start</button>
+    </form>
+
+    <audio id="alarmSound" class="hidden">
+        <source src="alarm.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        function openGoogleMaps() {
+            const source = document.getElementById('source').value;
+            const destination = document.getElementById('destination').value;
+            const workplace = document.getElementById('workplace').value;
+            const enableAlarm = document.getElementById('enableAlarm').checked;
+            
+            const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(source)}&destination=${encodeURIComponent(destination)}&waypoints=${encodeURIComponent(workplace)}`;
+            window.open(mapsUrl, '_blank');
+
+            // Start monitoring location to trigger alarm when near workplace if enabled
+            if (enableAlarm) {
+                monitorLocation(workplace);
+            }
+        }
+
+        function monitorLocation(workplace) {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(position => {
+                    const currentLat = position.coords.latitude;
+                    const currentLon = position.coords.longitude;
+
+                    const workplaceLatLon = workplace.split(",");
+                    const workplaceLat = parseFloat(workplaceLatLon[0]);
+                    const workplaceLon = parseFloat(workplaceLatLon[1]);
+
+                    const distance = getDistanceFromLatLonInKm(currentLat, currentLon, workplaceLat, workplaceLon);
+                    
+                    // Trigger alarm when within 0.1 km (100 meters) of workplace
+                    if (distance <= 0.1) {
+                        document.getElementById('alarmSound').play();
+                    }
+                }, error => {
+                    console.error("Error watching position:", error);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the earth in km
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in km
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+    </script>
+</body>
+</html>
