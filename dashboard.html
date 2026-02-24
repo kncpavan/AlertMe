@@ -3,27 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alarm Buttons</title>
+    <title>AlertMe Dashboard</title>
     <link href="style.css" rel="stylesheet" />
-    <link href="alarm.html" rel="alarampage" />
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+        .user-info {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        a {
+            text-decoration: none;
         }
         button {
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 16px;
+            padding: 20px 40px;
+            font-size: 18px;
             cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .logout-btn {
+            margin-top: 40px;
+            background: #dc3545;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
         }
     </style>
 </head>
 <body>
-    <a href="clock.html"><button id="clockAlarm">Clock Alarm</button></a>
-    <a href = 'location.html'><button id="locationAlarm">Location Alarm</button></a>
+    <div class="container">
+        <h1>🔔 AlertMe</h1>
+        <p class="user-info">Welcome, <span id="username">User</span></p>
+        <div class="btn-container">
+            <a href="clock.html"><button>Clock Alarm</button></a>
+            <a href="location.html"><button>Location Alarm</button></a>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Check if logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+        
+        document.getElementById('username').textContent = currentUser;
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
