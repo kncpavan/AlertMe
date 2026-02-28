@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock Alarm</title>
+    <link href="style2.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ Clock Alarm</h1>
+        <input type="datetime-local" id="alarmDate">
+        <button onclick="setAlarm()">Set Alarm</button>
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <audio id="alarmSound" src="ringtone.mp3" preload="auto"></audio>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('currentUser')) {
+            window.location.href = 'index.html';
+        }
+
+        function setAlarm() {
+            const alarmDateInput = document.getElementById('alarmDate').value;
+            const alarmDate = new Date(alarmDateInput);
+            const now = new Date();
+
+            if (alarmDate <= now) {
+                alert('Please set a future date and time.');
+                return;
+            }
+
+            const timeToAlarm = alarmDate.getTime() - now.getTime();
+            setTimeout(() => {
+                document.getElementById('alarmSound').play();
+                alert('Wake up!');
+            }, timeToAlarm);
+        }
+    </script>
+</body>
+</html>

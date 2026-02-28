@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - AlertMe</title>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 AlertMe</h1>
+        
+        <!-- Sign In Form -->
+        <div id="signin-section" class="form-section active">
+            <p class="subtitle">Sign in to continue</p>
+            <p id="signin-error" class="error"></p>
+            <form id="signin-form">
+                <div class="form-group">
+                    <label for="signin-username">Username:</label>
+                    <input type="text" id="signin-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signin-password">Password:</label>
+                    <input type="password" id="signin-password" required>
+                </div>
+                <button type="submit">Log In</button>
+            </form>
+            <p class="toggle-link">Don't have an account? <a onclick="showSignup()">Sign Up</a></p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signup-section" class="form-section">
+            <p class="subtitle">Create a new account</p>
+            <p id="signup-error" class="error"></p>
+            <p id="signup-success" class="success"></p>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-username">Username:</label>
+                    <input type="text" id="signup-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password:</label>
+                    <input type="password" id="signup-confirm" required>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+            <p class="toggle-link">Already have an account? <a onclick="showSignin()">Log In</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Get users from localStorage
+        function getUsers() {
+            const users = localStorage.getItem('alertme_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Save users to localStorage
+        function saveUsers(users) {
+            localStorage.setItem('alertme_users', JSON.stringify(users));
+        }
+
+        // Show signup form
+        function showSignup() {
+            document.getElementById('signin-section').classList.remove('active');
+            document.getElementById('signup-section').classList.add('active');
+            clearMessages();
+        }
+
+        // Show signin form
+        function showSignin() {
+            document.getElementById('signup-section').classList.remove('active');
+            document.getElementById('signin-section').classList.add('active');
+            clearMessages();
+        }
+
+        // Clear error/success messages
+        function clearMessages() {
+            document.getElementById('signin-error').style.display = 'none';
+            document.getElementById('signup-error').style.display = 'none';
+            document.getElementById('signup-success').style.display = 'none';
+        }
+
+        // Sign In
+        document.getElementById('signin-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signin-username').value;
+            const password = document.getElementById('signin-password').value;
+            
+            const users = getUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('currentUser', username);
+                window.location.href = 'dashboard.html';
+            } else if (username === 'admin' && password === 'alertme123') {
+                localStorage.setItem('currentUser', 'admin');
+                window.location.href = 'dashboard.html';
+            } else {
+                const error = document.getElementById('signin-error');
+                error.textContent = 'Invalid username or password';
+                error.style.display = 'block';
+            }
+        });
+
+        // Sign Up
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            
+            const users = getUsers();
+            
+            // Validation
+            if (password !== confirm) {
+                const error = document.getElementById('signup-error');
+                error.textContent = 'Passwords do not match';
+                error.style.display = 'block';
+                return;
+            }
+            
+            if (users.some(u => u.username === username)) {
+                const error = document.getElementById('signup-error');
+                error.textContent = 'Username already exists';
+                error.style.display = 'block';
+                return;
+            }
+            
+            // Add new user
+            users.push({ username, email, password });
+            saveUsers(users);
+            
+            const success = document.getElementById('signup-success');
+            success.textContent = 'Account created! Please sign in.';
+            success.style.display = 'block';
+            
+            document.getElementById('signup-form').reset();
+            
+            setTimeout(() => {
+                showSignin();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
