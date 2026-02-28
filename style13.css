@@ -1,0 +1,117 @@
+/* AlertMe - Location Alarm Page Styles */
+
+/* This file is kept for backward compatibility */
+/* All styling is now handled inline in location.html for consistency */
+
+/* Legacy styles (deprecated - use inline styles) */
+body.location-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.para {
+    color: white;
+}
+
+.head {
+    text-align: center;
+    margin-left: 200px;
+}
+
+.card {
+    width: 150px;
+}
+
+.but {
+    margin-right: 300px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px;
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 40px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    color: #444;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+input {
+    width: calc(100% - 50px);
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #f093fb;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.15);
+}
+
+button {
+    padding: 18px 40px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(245, 87, 108, 0.5);
+}
+
+#status {
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.hidden {
+    display: none !important;
+}
